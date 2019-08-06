@@ -1,0 +1,69 @@
+body {
+    text-align: center;
+}
+button {
+    cursor: pointer;
+}
+
+
+.card {
+    margin: 0, auto;
+    /* border: 1px solid black; */
+}
+
+/* #dealer-crib-column {
+    grid-area: leftcol;
+
+} */
+#bottom-hand {
+    grid-area: bottomrow;
+}
+#crib-area {
+    grid-area: midleftcol
+}
+#dealer-top {
+    grid-area: topleftcol;
+}
+#dealer-bottom {
+    grid-area: bottomleftcol;
+}
+#game-board {
+    grid-area: midrow;
+}
+#game-table {
+    background-color: green;
+    height: 71vh;
+    width: 71vw;
+    margin: 0 auto;
+    text-align: center;
+	max-width: 100%;
+	display: grid;
+	grid-template-rows: 1fr 3fr 1fr;
+	grid-template-columns: 1fr 3fr 1fr;
+	grid-template-areas: 
+		"topleftcol toprow toprightcol"
+		"midleftcol midrow midrightcol"
+		"bottomleftcol bottomrow bottomrightcol";
+	column-gap: 25px;
+}
+#gb-button {
+    margin: 0, auto;
+    text-align: right;
+}
+#message-board {
+    grid-area: midrightcol;
+}
+#crib-button {
+    visibility: hidden;
+}
+#p1-points {
+    grid-area: bottomrightcol;
+}
+#p2-points {
+    grid-area: toprightcol;
+}
+#top-hand {
+    grid-area: toprow;
+}
+
+
