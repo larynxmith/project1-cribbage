@@ -52,6 +52,7 @@ button {
 }
 #message-board {
     grid-area: midrightcol;
+    color: yellow;
 }
 #crib-button {
     visibility: hidden;
