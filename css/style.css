@@ -21,6 +21,12 @@ button {
 #crib-area {
     grid-area: midleftcol
 }
+#crib-button {
+    background-color: lightpink;
+    color: magenta;
+    font-size: 24px;
+    border-radius: 40%;
+}
 #dealer-top {
     grid-area: topleftcol;
     visibility: hidden;
@@ -43,6 +49,7 @@ button {
     height: 71vh;
     width: 71vw;
     margin: 0 auto;
+    border: 10px darkgreen solid;
     text-align: center;
 	max-width: 100%;
 	display: grid;
@@ -55,9 +62,13 @@ button {
 	column-gap: 25px;
 }
 #gb-button {
-    /* margin: 0, auto; */
-    /* text-align: right; */
-    /* justify-content: space-between; */
+    margin: 0, auto;
+    text-align: left; 
+    font-size: 24px;
+    justify-content: space-between;
+    background-color: lightgreen;
+    color: darkgreen;
+    border-radius: 40%;
 }
 #message-board {
     grid-area: midrightcol;
@@ -71,6 +82,7 @@ button {
 }
 #p1-points {
     grid-area: bottomrightcol;
+    font-size: 24px;
 }
 #p1-game-points {
     color: red;
@@ -80,6 +92,7 @@ button {
 }
 #p2-points {
     grid-area: toprightcol;
+    font-size: 24px;
 }
 #p2-game-points {
     color: aqua;

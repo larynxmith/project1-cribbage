@@ -241,7 +241,6 @@ function dealerHandClick(card){
 function updateRoundCount (card) {
     let value = Math.min((card.rank % 14), 10)
     roundCount += value;
-    console.log("round Count = " + roundCount);
     document.getElementById("pone-points").textContent = ponePoints;
     document.getElementById("dealer-points").textContent = dealerPoints;
     document.getElementById("round-count").textContent = roundCount;
@@ -256,19 +255,16 @@ function playPointsCheck (currentPlayerPoints) {
         //     currentPlayerPoints = checkForGo(currentPlayerPoints);
         
         case (gameBoard.length === 2) :
-            console.log("hi2");
             currentPlayerPoints = checkforFifteen(currentPlayerPoints);
             currentPlayerPoints = checkForPair(currentPlayerPoints);
             break;
         case (gameBoard.length === 3) :
-            console.log("hi3");
             currentPlayerPoints = checkforFifteen(currentPlayerPoints);
             currentPlayerPoints = checkForPair(currentPlayerPoints);
             currentPlayerPoints = checkForRoyal(currentPlayerPoints);
             currentPlayerPoints = checkForRuns(currentPlayerPoints);
             break;
         case (gameBoard.length >= 4) :
-            console.log("hi4");
             currentPlayerPoints = checkforFifteen(currentPlayerPoints);
             currentPlayerPoints = checkForPair(currentPlayerPoints);
             currentPlayerPoints = checkForRoyal(currentPlayerPoints);
@@ -370,7 +366,6 @@ function endGame(){
         ponePoints = 0;
         dealerPoints = 0;
         roundCount = 0;
-        console.log(roundCount);
         currentPlayerPoints = 0;
         cardsInCrib = 0;
         poneHand = [];
@@ -386,7 +381,7 @@ function endGame(){
         document.getElementById("pone-points").textContent = ponePoints;
         document.getElementById("dealer-points").textContent = dealerPoints;
         document.getElementById("round-count").textContent = roundCount;
-        switchRoles();
+        //switchRoles();
         startGame();
 
     };
