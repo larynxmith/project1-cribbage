@@ -23,12 +23,20 @@ button {
 }
 #dealer-top {
     grid-area: topleftcol;
+    visibility: hidden;
+    color: purple;
+    font-size: 30px;
 }
 #dealer-bottom {
     grid-area: bottomleftcol;
+    visibility: hidden;
+    color: purple;
+    font-size: 30px;
 }
 #game-board {
     grid-area: midrow;
+    display: flex;
+    justify-content: space-between;
 }
 #game-table {
     background-color: green;
@@ -47,12 +55,16 @@ button {
 	column-gap: 25px;
 }
 #gb-button {
-    margin: 0, auto;
-    text-align: right;
+    /* margin: 0, auto; */
+    /* text-align: right; */
+    /* justify-content: space-between; */
 }
 #message-board {
     grid-area: midrightcol;
     color: yellow;
+    font-size: 30px;
+    display: flex;
+    justify-content: center;
 }
 #crib-button {
     visibility: hidden;
@@ -60,8 +72,24 @@ button {
 #p1-points {
     grid-area: bottomrightcol;
 }
+#p1-game-points {
+    color: red;
+}
+#ponepoints {
+    margin-top: 50px;
+}
 #p2-points {
     grid-area: toprightcol;
+}
+#p2-game-points {
+    color: aqua;
+}
+#roundcount {
+    font-size: 24px;
+}
+#dealerpoints {
+    margin-top: 50px;
+    
 }
 #top-hand {
     grid-area: toprow;

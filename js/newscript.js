@@ -3,12 +3,21 @@ let cribHand;
 let gameHand;
 let roundCount = 0;
 let cardsInCrib = 0;
+let playerOneGamePoints = 0;
+let playerOneMatchPoints = 0;
+let playerTwoGamePoints = 0;
+let playerTwoMatchPoints= 0;
+let ponePoints = 0;
+let dealerPoints = 0;
+let gameBoardCards = 0;
 let lowerHand;
 let upperHand;
 let deck;
 let poneHand;
 let dealerHand;
 let currentCard;
+let isPoneTurn;
+let currentPhase;
 //Deal Phase
 
 
@@ -23,6 +32,8 @@ $( document ).ready(function() {
 // 
 
 function startGame() {
+    //pre-game = currentphase 0
+    currentPhase = 0;
     cribHand = [];
     
     //create deck
@@ -35,14 +46,16 @@ function startGame() {
 }
 function onStartClick() {
     document.getElementById("gb-button").removeEventListener("click", onStartClick);
+    document.getElementById("gb-button").style.visibility = "hidden";
     //create hands
     upperHand = new cards.Hand({faceUp: false, y:50});
     lowerHand = new cards.Hand({faceUp: true, y:600});
     deck.deal(6, [upperHand, lowerHand], 50);
     poneHand = lowerHand;
     dealerHand = upperHand;
+    document.getElementById("dealer-top").style.visibility = "visible";
     document.getElementById("message-board").textContent = "Pone, please select two cards, one at a time, to send to the Dealer's Crib and Press the 'Send to Crib?' Button";
-
+    isPoneTurn = true;
     //create crib
     createCrib();
     //deal to hands
@@ -57,9 +70,15 @@ function preGame(currentHand, cb) {
     //STRETCH--offer cut to select Dealer, reshuffle deck, assign Dealer
 
     //add listener for current hand
-    currentHand.click(onCardClick);
+    currentHand.click(handleHandClick);
     function onCardClick(card) {
-        currentCard = card;
+        console.log(currentHand.faceUp);
+        if(currentHand.faceUp) {
+            currentCard = card;
+        } else {
+            console.log("Not your turn!");
+        };
+    
         //console.log(currentCard);
         //console.log(cardsInCrib);
         if (cardsInCrib < 4) {
@@ -96,7 +115,7 @@ function preGame(currentHand, cb) {
 
 function createCrib() {
     cribHand = new cards.Hand({faceUp: false});
-    cribHand.x -= 360;
+    cribHand.x -= 260;
     cribHand.render({callback:function() {
         cribHand.render();
     }});
@@ -120,6 +139,8 @@ function changeHandVisibility() {
 function switchRoles() {
     poneHand = !poneHand;
     dealerHand = !dealerHand;
+    dealerPoints = playerOneGamePoints;
+    ponePoints = playerTwoGamePoints;
     // if (poneHand === lowerHand) {
     //     dealerHand = lowerHand;
     //     poneHand = upperHand;
@@ -129,6 +150,18 @@ function switchRoles() {
 }
 
 // Play Phase
+function playPhase() {
+    currentPhase = 1;
+    createGameBoard();
+    showTopCard();
+    addGameCards();
+    //playCardsOnBoard();
+    if (roundCount > 21 && roundCount < 31) {
+        console.log("Checking for Go");
+        currentPlayerPoints = checkForGo(currentPlayerPoints);
+    };
+    
+}
 function createGameBoard() {
     gameBoard = new cards.Hand({faceUp: true});
     gameBoard.x += 10;
@@ -136,17 +169,7 @@ function createGameBoard() {
         //gameBoard.addCard(deck.topCard());
         gameBoard.render();
     }});
-}
-function playPhase() {
-    createGameBoard();
-    showTopCard();
-    addGameCards();
-}
-function addGameCards (card) {
-    document.getElementById("message-board").textContent = "Pone, please play a card";
-    poneHand.click(poneHandClick);
-    dealerHand.click(dealerHandClick);
-}
+}   
 function showTopCard () {
     //shift deck over to give Play space
     deck.x -= 140;
@@ -159,29 +182,74 @@ function showTopCard () {
     deck.render({callback:function() {
     topCard.addCard(deck.topCard());
     topCard.render();
+    if (topCard[0].rank === 11){
+        console.log("His Heels for Two")
+        dealerPoints += 2;
+    };
 }});
 }
+function addGameCards (card) {
+    document.getElementById("message-board").textContent = "Pone, please play a card";
+}
+function handleHandClick (card) {
+    if (currentPhase === 0) {
+        if(card.container.faceUp) {
+            currentCard = card;
+        } else {
+            console.log("Not your turn!");
+        };
+    
+        //console.log(currentCard);
+        //console.log(cardsInCrib);
+        if (cardsInCrib < 4) {
+            document.getElementById("crib-button").style.visibility = "visible";
+        }
+    } else if (currentPhase === 1) {
+        if (isPoneTurn && card.container.faceUp) {
+            poneHandClick(card);
+            isPoneTurn = !isPoneTurn;
+        } else if(!isPoneTurn && card.container.faceUp) {
+            dealerHandClick(card);
+            isPoneTurn = !isPoneTurn;
+        }
+        if (gameBoard.length === 8) {
+            if (isPoneTurn){
+                dealerPoints +=1;
+            } else{
+                ponePoints +=1;
+            }
+            document.getElementById("message-board").textContent = "Last Card for One";
+            endGame();
+        }
+    }
+    console.log("IS it pone's turn?" + isPoneTurn)
+}
+// function playCardsOnBoard (card) {
+//     poneHandClick(card);
+//     dealerHandClick(card);
+// }
 
 function poneHandClick (card) {
     gameBoard.addCard(card);
-    card.y += 25;
+    //card.y += 25;
     gameBoard.render();
-    console.log(roundCount);
-    console.log(card);
     updateRoundCount(card);
-    playPointsCheck(roundCount);
+    ponePoints = playPointsCheck(ponePoints);
+    console.log("Player One's points: " + ponePoints);
     //getElementById("round-count").textContent = roundCount.value;
-    //console.log("round Count = " + roundCount);
+    //console.log( roundCount);
     changeHandVisibility();
     document.getElementById("message-board").textContent = "Dealer, please play a card";
 
 }
 function dealerHandClick(card){
     gameBoard.addCard(card);
-    card.y -= 25;
+    //card.y -= 25;
     gameBoard.render();
     updateRoundCount(card);
-    //console.log("round Count = " + roundCount);
+    dealerPoints = playPointsCheck(dealerPoints);
+    console.log("Player Two's points: " + dealerPoints);
+    //
     changeHandVisibility();
     document.getElementById("message-board").textContent = "Pone, please play a card";
 
@@ -191,35 +259,106 @@ function updateRoundCount (card) {
     console.log("Card rank: " + card.rank +" new value = " + value);
     roundCount += value;
     console.log("round Count = " + roundCount);
+    document.getElementById("round-count").textContent = roundCount;
+    document.getElementById("pone-points").textContent = ponePoints;
+    document.getElementById("dealer-points").textContent = dealerPoints;
     return roundCount;
 }
-function playPointsCheck(roundCount){
-    if (roundCount === 15) {
-        //assign +2 to currentPlayer's Game points, post "Fifteen for Two"
+
+
+function playPointsCheck (currentPlayerPoints) {
+    switch (true) {
+        case (gameBoard.length === 2) :
+            currentPlayerPoints = checkforFifteen(currentPlayerPoints);
+            console.log(currentPlayerPoints);
+            currentPlayerPoints = checkForPair(currentPlayerPoints);
+            console.log(currentPlayerPoints);
+            break;
+        case (gameBoard.length === 3) :
+            currentPlayerPoints = checkforFifteen(currentPlayerPoints);
+            currentPlayerPoints = checkForPair(currentPlayerPoints);
+            currentPlayerPoints = checkForRoyal(currentPlayerPoints);
+            currentPlayerPoints = checkForRuns(currentPlayerPoints);
+            break;
+        case (gameBoard.length >= 4) :
+            currentPlayerPoints = checkforFifteen(currentPlayerPoints);
+            currentPlayerPoints = checkForPair(currentPlayerPoints);
+            currentPlayerPoints = checkForRoyal(currentPlayerPoints);
+            currentPlayerPoints = checkForRuns(currentPlayerPoints);
+            currentPlayerPoints = checkForThirtyOne(currentPlayerPoints);
+            break;
+        default :
+            console.log("Points not working");
+            break;
     }
+    console.log(currentPlayerPoints);
+    return currentPlayerPoints;
+}
+
+function checkforFifteen (currentPlayerPoints) {
+    if(roundCount === 15) {
+        console.log("Fifteen for Two");
+        return currentPlayerPoints + 2;
+    }
+    return currentPlayerPoints;
+};
+function checkForPair (currentPlayerPoints) {
+    let i = gameBoard.length - 1;
+    console.log(gameBoard);
+    console.log("Current card is : " + gameBoard[i]);
+    if (gameBoard[i].rank === gameBoard[i-1].rank) {
+        console.log("Pair for Two");
+        return currentPlayerPoints + 2;
+    }
+    return currentPlayerPoints;
+}
+function checkForRoyal (currentPlayerPoints) {
+    let i = gameBoard.length - 1;
+    console.log(gameBoard);
+    console.log("Current card is : " + gameBoard[i]);
+    if (gameBoard[i].rank === gameBoard[i-1].rank && gameBoard[i-1].rank === gameBoard[i-2].rank) {
+        console.log("Pair Royal for Six"); 
+        return currentPlayerPoints + 4;
+    }
+    return currentPlayerPoints;
+}
+function checkForDoubleRoyal (currentPlayerPoints) {
+    let i = gameBoard.length - 1;
+    console.log(gameBoard);
+    console.log("Current card is : " + gameBoard[i]);
+    if (gameBoard[i].rank === gameBoard[i-1].rank && gameBoard[i-1].rank === gameBoard[i-2].rank && gameBoard[i-2].rank === gameBoard[i-3].rank) {
+        console.log("Double Pair Royal for Twelve");
+        return currentPlayerPoints +=6 ;
+    }
+    return currentPlayerPoints;
+}
+function checkForRuns(currentPlayerPoints) {
+    //run check, TBD
+    return currentPlayerPoints;
+}
+function checkForThirtyOne(currentPlayerPoints) {
     if (roundCount === 31) {
-        //assign +2 to currentPlayer's Game Points, post "Thirty-One for Two"
+        return currentPlayerPoints + 2
     }
-    if (roundCount > 21 && roundCount < 31) {
-        checkForGo();
-    }
-    if (card[i].rank === card[i-1].rank && round has not been reset) {
-        //assign +2 to currentPlayer's Game Points, post "Pair for Two"
-    }
-    if (card[i.rank] === card[i-1].rank && card[i].rank === card[i-2].rank && round has not been reset){
-        //assign +6 to currentPlayer's Game Points, post "Pair Royal for Six"
-    }
-    if (card[i.rank] === card[i-1].rank && card[i].rank === card[i-2].rank && card[i].rank === card[i-3].rank &&round has not been reset){
-        //assign +12 to currentPlayer's Game Points, post "Double Pair Royal for Twelve"
-    }
+    return currentPlayerPoints;
 }
 function checkForGo () {
     currentPlayerHand.forEach((card) => {
-        if (roundCount + value <= 31) {
+        if (roundCount + card.rank <= 31) {
             return;
-        } else 
+        } else {
         //declare a Go for current player, and check for Go for other player, allowing them to play up to 31
         //assign +1 for last card played without reaching 31, or +2 for reaching 31
         //reset roundCount, resume play
-    }
+        };
+    });
 }
+function endGame(){
+    currentPhase = 2
+    playerOneGamePoints = ponePoints;
+    playerTwoGamePoints = dealerPoints;
+    document.getElementById("p2-game-points").textContent = playerTwoGamePoints;
+    document.getElementById("p1-game-points").textContent = playerOneGamePoints;
+    //TBD
+}
+
