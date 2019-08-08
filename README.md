@@ -2,6 +2,8 @@
 
 Thanks for coming to my game. This is a labor of love, so there is much room for improvement; do not hesitate to send your thoughts along!
 
+You can play the current version of the game here: https://larynxmith.github.io/Cribbage/
+
 
 The history of Cribbage is long(over 400 years) and varied; consider looking over the following links in your spare time:
 
@@ -14,7 +16,7 @@ However here's a quick summary of the Rules:
 Cribbage is a turn-based, point-accumulating game, where a Game Win is when a player first reaches 121 points. Over the years,  a peg board has been devised, cunningly called a Cribbage Board, with which you keep track of the many types of point generation quickly by moving the pegs in accordance to the point value.
 
 
-![Image description](https://mmtcdn.blob.core.windows.net/084395e6770c4e0ebc5612f000acae8f/mmtcdn/Products1727-640x640-1977191873.jpg)
+![Cribbage Board](https://mmtcdn.blob.core.windows.net/084395e6770c4e0ebc5612f000acae8f/mmtcdn/Products1727-640x640-1977191873.jpg)
 
 The game itself is broken down into Phases:
 
